@@ -1,17 +1,18 @@
 #include "MainWindow.h"
 #include "App.h"
 
+
 App::App(MainWindow& wnd, std::atomic<bool>& runFlag, std::shared_ptr<MessageHandler> msgHandler_in)
 	:
 	wnd(wnd),
 	gfx(wnd),
     msgHandler(msgHandler_in),
     running(runFlag),
-    nextFrame(true),
-    firstMessage(true)
+    nextFrame(true)
 {
     InputThread = std::thread(&App::InputLoop, this);
 }
+
 
 App::~App()
 {
@@ -21,9 +22,10 @@ App::~App()
     }
 }
 
+
 void App::Go()
 {
-    if (firstMessage == false)
+    if (!msgHandler->GetFirstMessage())
     {
         gfx.BeginFrame();
         if (!nextFrame.load(std::memory_order_acquire))
@@ -39,6 +41,7 @@ void App::Go()
     }
 }
 
+
 void App::InputLoop()
 {
     while (running)
@@ -51,7 +54,6 @@ void App::InputLoop()
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
     } 
 }
-
 
 
 void App::PlayerInput()
@@ -72,12 +74,13 @@ void App::PlayerInput()
     {
         msgHandler->AppToMSG("move_right");
     }
-    if (firstMessage.load())
+    if (msgHandler->GetFirstMessage())
     {
         msgHandler->AppToMSG("start_pos");
-        firstMessage.store(false);
+        msgHandler->FirstMessageSend();
     }
 }
+
 
 void App::DisplayOutput()
 {

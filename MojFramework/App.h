@@ -29,6 +29,5 @@ private:
 	std::thread InputThread;
 	std::atomic<bool>& running;
 	std::atomic<bool> nextFrame;
-	std::atomic<bool> firstMessage;
 	/********************************/
 };

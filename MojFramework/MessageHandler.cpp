@@ -3,6 +3,8 @@
 
 
 MessageHandler::MessageHandler()
+    :
+    firstMessage(true)
 {}
 
 
@@ -67,4 +69,14 @@ std::optional<std::pair<int, int>> MessageHandler::MSGToApp()
         //return std::nullopt;
         return lastPos;
     }
+}
+
+bool MessageHandler::GetFirstMessage()
+{
+    return firstMessage.load();
+}
+
+void MessageHandler::FirstMessageSend()
+{
+    firstMessage.store(false);
 }
