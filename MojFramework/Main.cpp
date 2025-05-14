@@ -38,7 +38,11 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 	}
 
 	running = false;
-	networking.join();
+	io.stop();
+	if (networking.joinable())
+	{
+		networking.join();
+	}
 	
 	return 0;
 }

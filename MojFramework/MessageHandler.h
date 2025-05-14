@@ -21,6 +21,6 @@ private:
     std::string msg = "";
     std::queue<std::string> app_messages;
     std::queue<std::pair<int, int>> app_position;
-    std::pair<int, int> lastPos;
+    std::optional<std::pair<int, int>> lastPos = std::nullopt;
     std::atomic<bool> firstMessage;
 };

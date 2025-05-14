@@ -16,6 +16,8 @@ public:
 private:
 	void InputLoop();
 	void PlayerInput();
+	void UpdateEnemy();
+	void UpdateCharacter();
 	void DisplayOutput();
 	/********************************/
 	/*  Moje Funkcije               */
@@ -29,5 +31,9 @@ private:
 	std::thread InputThread;
 	std::atomic<bool>& running;
 	std::atomic<bool> nextFrame;
+	int xEnemy = 200;
+	int yEnemy = 200;
+	bool moveUP = true;
+	bool moveLeft = true;
 	/********************************/
 };

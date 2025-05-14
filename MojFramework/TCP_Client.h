@@ -15,7 +15,7 @@ private:
     //    void SendUsername();
     void ReceiveMessages();
     void CheckAndSend();
-    //    void Shutdown();
+    void Shutdown();
 private:
     boost::asio::ip::tcp::socket socket;
     std::string username;

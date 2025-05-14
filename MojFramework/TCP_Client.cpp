@@ -25,9 +25,14 @@ void ChatClient::Start()
         {
             if (!ec)
             {
+                boost::asio::ip::tcp::no_delay option(true);
+                socket.set_option(option);
                 //SendUsername();
-                ReceiveMessages();
-                CheckAndSend();
+                boost::asio::post(socket.get_executor(), [this, self]()
+                    {
+                        ReceiveMessages();
+                        CheckAndSend();
+                    });
             }
             else
             {
@@ -77,7 +82,7 @@ void ChatClient::ReceiveMessages() //12. Client(TCP)
             }
             else
             {
-                //Shutdown();
+                Shutdown();
             }
         });
     //std::cout << "Step 12--------------\n";
@@ -91,6 +96,11 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
     msg = msgHandler->MSGToClient();   //3. Client(TCP)
     if (!msg.empty())
     {
+        if (!socket.is_open())
+        {
+            return;
+        }
+
         boost::asio::async_write(socket, boost::asio::buffer(msg),
             [this, self](const boost::system::error_code& ec, std::size_t)
             {
@@ -101,7 +111,7 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
                 else
                 {
                     //std::cerr << "Send error: " << ec.message() << "\n";
-                    //Shutdown();
+                    Shutdown();
                     return;
                 }
                 boost::asio::post(socket.get_executor(), [this, self]() 
@@ -113,7 +123,7 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
     }
     else
     {
-        timer.expires_after(std::chrono::milliseconds(10));
+        timer.expires_after(std::chrono::milliseconds(2));
         timer.async_wait([this, self](boost::system::error_code ec)
             {
                 if (!ec)
@@ -125,17 +135,9 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
 }
 
 
-//void ChatClient::Shutdown()
-//{
-//    std::cout << "ChatClient::Shutdown:\n";
-//    try
-//    {
-//        socket.cancel();
-//        socket.shutdown(asio::ip::tcp::socket::shutdown_both); 
-//    }
-//    catch (const system::system_error& e)
-//    {
-//        std::cout << "Shutdown failed: " << e.what() << "\n";
-//    }
-//    socket.close();
-//}
+void ChatClient::Shutdown()
+{
+    socket.cancel();
+    socket.shutdown(asio::ip::tcp::socket::shutdown_both); 
+    socket.close();
+}
