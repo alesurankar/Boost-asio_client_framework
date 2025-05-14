@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 #include "App.h"
-
+#include <iostream>
 
 App::App(MainWindow& wnd, std::atomic<bool>& runFlag, std::shared_ptr<MessageHandler> msgHandler_in)
 	:
@@ -25,31 +25,33 @@ App::~App()
 
 void App::Go()
 {
+    //float dt = ftOUT.Mark();
+    //float dtMs = dt * 1000.0f;
+    //std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
+
     gfx.BeginFrame();
-    //if (!msgHandler->GetFirstMessage())
-    //{
-        DisplayOutput();
-        nextFrame.store(true, std::memory_order_release);
-    //}
-    //else
-    //{
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    //}
+    DisplayOutput();
+    nextFrame.store(true, std::memory_order_release);
     gfx.EndFrame();
 }
 
 
 void App::InputLoop()
 {
+
     while (running)
     {
+        //float dt = ftIN.Mark();
+        //float dtMs = dt * 1000.0f;
+        //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
+
         if (nextFrame.load(std::memory_order_acquire))
         {
             PlayerInput();
             nextFrame.store(false, std::memory_order_release);
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
-    } 
+        std::this_thread::sleep_for(std::chrono::milliseconds(8));
+    }
 }
 
 

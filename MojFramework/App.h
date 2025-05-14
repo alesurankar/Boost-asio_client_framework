@@ -4,6 +4,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include <string>
+#include "FrameTimer.h"
 
 class App
 {
@@ -27,6 +28,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  Moji Parametri              */
+	FrameTimer ftIN;
+	FrameTimer ftOUT;
 	std::shared_ptr<MessageHandler> msgHandler;
 	std::thread InputThread;
 	std::atomic<bool>& running;

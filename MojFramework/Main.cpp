@@ -12,8 +12,21 @@ This Framework is Cloned and modified from PlanetChili - chili_framework <http:/
 #include <chrono>
 
 
+#include <iostream>
+
+void CreateConsole()
+{
+	AllocConsole();
+	FILE* fp;
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	std::cout.clear();
+}
+
+
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
+	CreateConsole();
+
 	MainWindow wnd(hInst, pArgs);
 	std::atomic<bool> running{ true };
 	std::shared_ptr<MessageHandler> msgHandler = std::make_shared<MessageHandler>();
