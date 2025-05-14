@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "App.h"
 #include <iostream>
+#include <sstream>
 
 App::App(MainWindow& wnd, std::atomic<bool>& runFlag, std::shared_ptr<MessageHandler> msgHandler_in)
 	:
@@ -38,7 +39,6 @@ void App::Go()
 
 void App::InputLoop()
 {
-
     while (running)
     {
         //float dt = ftIN.Mark();
@@ -85,76 +85,76 @@ void App::PlayerInput()
     }
 }
 
-void App::UpdateEnemy()
-{
-    if (xEnemy < 100)
-    {
-        moveLeft = false;
-    }
-    if (xEnemy > 700)
-    {
-        moveLeft = true;
-    }
-    if (yEnemy < 100)
-    {
-        moveUP = false;
-    }
-    if (yEnemy > 500)
-    {
-        moveUP = true;
-    }
-    if (moveUP)
-    {
-        yEnemy--;
-    }
-    else if (!moveUP)
-    {
-        yEnemy++;
-    }
-    if (moveLeft)
-    {
-        xEnemy--;
-    }
-    else if (!moveLeft)
-    {
-        xEnemy++;
-    }
-    int width = 10;
-    int height = 10;
-    for (int i = xEnemy; i < xEnemy + width; i++)
-    {
-        for (int j = yEnemy; j < yEnemy + height; j++)
-        {
-            gfx.PutPixel(i, j, Colors::Red);
-        }
-    }   
-}
+//
+//void App::UpdateEnemy()
+//{
+//    if (xEnemy < 100)
+//    {
+//        moveLeft = false;
+//    }
+//    if (xEnemy > 700)
+//    {
+//        moveLeft = true;
+//    }
+//    if (yEnemy < 100)
+//    {
+//        moveUP = false;
+//    }
+//    if (yEnemy > 500)
+//    {
+//        moveUP = true;
+//    }
+//    if (moveUP)
+//    {
+//        yEnemy--;
+//    }
+//    else if (!moveUP)
+//    {
+//        yEnemy++;
+//    }
+//    if (moveLeft)
+//    {
+//        xEnemy--;
+//    }
+//    else if (!moveLeft)
+//    {
+//        xEnemy++;
+//    }
+//    int width = 10;
+//    int height = 10;
+//    for (int i = xEnemy; i < xEnemy + width; i++)
+//    {
+//        for (int j = yEnemy; j < yEnemy + height; j++)
+//        {
+//            gfx.PutPixel(i, j, Colors::Red);
+//        }
+//    }   
+//}
+
 
 void App::UpdateCharacter()
 {
-    auto optPos = msgHandler->MSGToApp();
-    if (optPos)
+    for (int i = x; i < x + width; i++)
     {
-        std::pair<int, int> pos = *optPos;
-        int x = pos.first;
-        int y = pos.second;
-        int width = 20;
-        int height = 20;
-        for (int i = x; i < x + width; i++)
+        for (int j = y; j < y + height; j++)
         {
-            for (int j = y; j < y + height; j++)
-            {
-                gfx.PutPixel(i, j, Colors::Green);
-            }
+            gfx.PutPixel(i, j, Colors::Green);
         }
     }
 }
-
-
 
 
 void App::DisplayOutput()
 {
-    UpdateEnemy();
+    UnpackMessage();
+    //UpdateEnemy();
     UpdateCharacter();
+}
+
+
+void App::UnpackMessage()
+{
+    std::string response = msgHandler->MSGToApp();
+    std::istringstream iss(response);
+    iss >> x >> y;
 }

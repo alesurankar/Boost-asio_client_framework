@@ -64,20 +64,21 @@ void ChatClient::ReceiveMessages() //12. Client(TCP)
                 std::string msg;
                 std::getline(is, msg);
 
+                msgHandler->ClientToMSG(msg);
                 //std::cout << "Step 12, ChatClient::ReadMessage::Received: " << msg << "\n";
 
-                size_t commaPos = msg.find(',');
-                if (commaPos != std::string::npos)
-                {
-                    int x = std::stoi(msg.substr(0, commaPos));
-                    int y = std::stoi(msg.substr(commaPos + 1));
-                    //std::cout << "Step 12, converted: " << "x = " << x << ", y = " << y << "\n";
-                    msgHandler->ClientToMSG(x, y); //13. MSGClient(middleman)
-                }
-                else
-                {
-                    //std::cout << "Invalid coordinate format: " << msg << "\n";
-                }
+                //size_t commaPos = msg.find(',');
+                //if (commaPos != std::string::npos)
+                //{
+                //    int x = std::stoi(msg.substr(0, commaPos));
+                //    int y = std::stoi(msg.substr(commaPos + 1));
+                //    //std::cout << "Step 12, converted: " << "x = " << x << ", y = " << y << "\n";
+                //    msgHandler->ClientToMSG(x, y); //13. MSGClient(middleman)
+                //}
+                //else
+                //{
+                //    //std::cout << "Invalid coordinate format: " << msg << "\n";
+                //}
                 ReceiveMessages();
             }
             else

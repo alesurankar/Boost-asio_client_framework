@@ -11,16 +11,20 @@ public:
     MessageHandler();
     void AppToMSG(const std::string& message);
     std::string MSGToClient();
-    void ClientToMSG(int x, int y);
-    std::optional<std::pair<int, int>> MSGToApp();
+    void ClientToMSG(const std::string& response); 
+    std::string MSGToApp();
+    //void ClientToMSG(int x, int y);
+    //std::optional<std::pair<int, int>> MSGToApp();
     bool GetFirstMessage();
     void FirstMessageSend();
 private:
-    std::mutex msg_mtx;
-    std::mutex pos_mtx;
+    std::mutex IN_mtx;
+    std::mutex OUT_mtx;
     std::string msg = "";
+    std::string response = "";
     std::queue<std::string> app_messages;
-    std::queue<std::pair<int, int>> app_position;
+    std::queue<std::string> app_responses;
+    //std::queue<std::pair<int, int>> app_position;
     std::optional<std::pair<int, int>> lastPos = std::nullopt;
     std::atomic<bool> firstMessage;
 };

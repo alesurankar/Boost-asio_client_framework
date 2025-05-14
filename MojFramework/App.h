@@ -3,8 +3,9 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
-#include <string>
 #include "FrameTimer.h"
+#include <string>
+#include <thread>    
 
 class App
 {
@@ -17,9 +18,10 @@ public:
 private:
 	void InputLoop();
 	void PlayerInput();
-	void UpdateEnemy();
+	//void UpdateEnemy();
 	void UpdateCharacter();
 	void DisplayOutput();
+	void UnpackMessage();
 	/********************************/
 	/*  Moje Funkcije               */
 	/********************************/
@@ -34,6 +36,10 @@ private:
 	std::thread InputThread;
 	std::atomic<bool>& running;
 	std::atomic<bool> nextFrame;
+	int x;
+	int y;
+	int width = 20;
+	int height = 20;
 	int xEnemy = 200;
 	int yEnemy = 200;
 	bool moveUP = true;
