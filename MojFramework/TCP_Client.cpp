@@ -85,7 +85,7 @@ void ChatClient::ReceiveMessages()
 }
 
 
-void ChatClient::CheckAndSend() //3. Client(TCP)
+void ChatClient::CheckAndSend()
 {
     //std::cout << "ChatClient::CheckAndSendMessage: " << ", Step 3. Client(TCP)\n";
     auto self = shared_from_this();
@@ -102,7 +102,7 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
             {
                 if (!ec)
                 {
-                    //std::cout << "Step 4: NetworkingThread::ChatClient::CheckAndSendMessage: " << msg;
+                    std::cout << "Step 4: NetworkingThread::ChatClient::CheckAndSendMessage: " << msg;
                 }
                 else
                 {
@@ -114,7 +114,7 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
                     {
                         CheckAndSend();
                     });
-                //std::cout << "Step4--------------\n";
+                std::cout << "Step4--------------\n";
             });
     }
     else

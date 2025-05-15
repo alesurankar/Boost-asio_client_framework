@@ -30,8 +30,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  Moji Parametri              */
-	FrameTimer ftIN;
-	FrameTimer ftOUT;
+	FrameTimer ft;
 	std::shared_ptr<MessageHandler> msgHandler;
 	std::thread InputThread;
 	std::atomic<bool>& running;

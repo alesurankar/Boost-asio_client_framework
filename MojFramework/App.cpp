@@ -28,9 +28,10 @@ void App::InputLoop()
     {
         if (!nextFrame)
         {
-            //float dt = ftIN.Mark();
+            //float dt = ft.Mark();
             //float dtMs = dt * 1000.0f;
             //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
+
             PlayerInput();
             nextFrame = true;
         }
@@ -74,10 +75,10 @@ void App::Go()
 {
     if (nextFrame)
     {
-        float dt = ftOUT.Mark();
-        float dtMs = dt * 1000.0f;
-        std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
-
+        //float dt = ft.Mark();
+        //float dtMs = dt * 1000.0f;
+        //std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
+        
         gfx.BeginFrame();
         UnpackMessage();
         DisplayOutput();
@@ -89,7 +90,7 @@ void App::Go()
 void App::UnpackMessage()
 {
     std::string response = msgHandler->MSGToApp();
-    std::cout << "void App::UnpackMessage(): " << response << "\n";
+    //std::cout << "void App::UnpackMessage(): " << response << "\n";
 
     //if (!response.empty() && response.back() == '\n') 
     //{
@@ -103,8 +104,8 @@ void App::UnpackMessage()
         {
             x = std::stoi(response.substr(0, commaPos));
             y = std::stoi(response.substr(commaPos + 1));
-            std::cout << "void App::UnpackMessage(): x = " << x << "\n";
-            std::cout << "void App::UnpackMessage(): y = " << y << "\n";
+            //std::cout << "void App::UnpackMessage(): x = " << x << "\n";
+            //std::cout << "void App::UnpackMessage(): y = " << y << "\n";
         }
     }
 }

@@ -12,6 +12,7 @@ void MessageHandler::AppToMSG(const std::string& message)
 {
     std::lock_guard<std::mutex> lock(IN_mtx);
     app_messages.push(message);
+    //std::cout << "void MessageHandler::AppToMSG(const std::string& message): app_messages.push(message): " << message << "\n";
 }
 
 std::string MessageHandler::MSGToClient()
@@ -28,6 +29,8 @@ std::string MessageHandler::MSGToClient()
             msg = "";
         }
     }
+    //std::cout << "std::string MessageHandler::MSGToClient(): app_messages.size(): " << app_messages.size() << "\n";
+    //std::cout << "std::string MessageHandler::MSGToClient(): msg: " << msg << "\n";
     return msg;
 }
 
