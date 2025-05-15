@@ -22,8 +22,9 @@ private:
     std::mutex OUT_mtx;
     std::string msg = "";
     std::string response = "";
+    std::string validResponse;
     std::queue<std::string> app_messages;
-    std::queue<std::string> app_responses;
+    //std::queue<std::string> app_responses;
     //std::queue<std::pair<int, int>> app_position;
     std::optional<std::pair<int, int>> lastPos = std::nullopt;
     std::atomic<bool> firstMessage;

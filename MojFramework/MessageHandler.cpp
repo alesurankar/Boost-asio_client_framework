@@ -1,5 +1,5 @@
 #include "MessageHandler.h"
-//#include <iostream>
+#include <iostream>
 
 
 MessageHandler::MessageHandler()
@@ -13,7 +13,6 @@ void MessageHandler::AppToMSG(const std::string& message)
     std::lock_guard<std::mutex> lock(IN_mtx);
     app_messages.push(message);
 }
-
 
 std::string MessageHandler::MSGToClient()
 {
@@ -32,28 +31,35 @@ std::string MessageHandler::MSGToClient()
     return msg;
 }
 
+///////////////////////////////////////////////////////////////////////////
 
 void MessageHandler::ClientToMSG(const std::string& response)
 {
     std::lock_guard<std::mutex> lock(OUT_mtx);
-    app_responses.push(response);
+    validResponse = response;
+    //std::cout << "void MessageHandler::ClientToMSG(const std::string& response): " << validResponse << "-waiting to be read from App\n";
+    //app_responses.push(response);
 }
 
 std::string MessageHandler::MSGToApp()
 {
-    {
-        std::lock_guard<std::mutex> lock(OUT_mtx);
-        if (!app_responses.empty())
-        {
-            response = app_responses.front() + "\n";
-            app_responses.pop();
-        }
-        else
-        {
-            response = "";
-        }
-    }
-    return response;
+    //{
+    //    std::lock_guard<std::mutex> lock(OUT_mtx);
+    //    if (!app_responses.empty())
+    //    {
+    //        response = app_responses.front() + "\n";
+    //        app_responses.pop();
+    //    }
+    //    else
+    //    {
+    //        response = "";
+    //    }
+    //}
+    //return response;
+    std::lock_guard<std::mutex> lock(OUT_mtx);
+    std::string messageToApp = validResponse;
+    std::cout << "std::string MessageHandler::MSGToApp(): " << messageToApp << "-was read\n";
+    return messageToApp;
 }
 
 

@@ -35,7 +35,7 @@ private:
 	std::shared_ptr<MessageHandler> msgHandler;
 	std::thread InputThread;
 	std::atomic<bool>& running;
-	std::atomic<bool> nextFrame;
+	//std::atomic<bool> nextFrame;
 	int x;
 	int y;
 	int width = 20;

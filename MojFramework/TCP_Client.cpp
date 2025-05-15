@@ -1,6 +1,7 @@
 #include "TCP_Client.h"
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 using namespace boost;
 
@@ -52,41 +53,35 @@ void ChatClient::Start()
 //}
 
 
-void ChatClient::ReceiveMessages() //12. Client(TCP)
+void ChatClient::ReceiveMessages()
 {
+    //float dt = ft.Mark();
+    //float dtMs = dt * 1000.0f;
+    //std::cout << "void App::UpdateLoop(): Frame Time: " << dtMs << " ms\n";
     auto self = shared_from_this();
-    boost::asio::async_read_until(socket, input_buffer, '\n',    //12. Client(TCP)
-        [this, self](boost::system::error_code ec, std::size_t length)
+    timer.expires_after(std::chrono::milliseconds(8));
+    timer.async_wait([this, self](boost::system::error_code ec)
         {
-            if (!ec)
-            {
-                std::istream is(&input_buffer);
-                std::string msg;
-                std::getline(is, msg);
+            boost::asio::async_read_until(socket, input_buffer, '\n',
+                [this, self](boost::system::error_code ec, std::size_t length)
+                {
+                    if (!ec)
+                    {
+                        std::istream is(&input_buffer);
+                        std::string msg;
+                        std::getline(is, msg);
 
-                msgHandler->ClientToMSG(msg);
-                //std::cout << "Step 12, ChatClient::ReadMessage::Received: " << msg << "\n";
-
-                //size_t commaPos = msg.find(',');
-                //if (commaPos != std::string::npos)
-                //{
-                //    int x = std::stoi(msg.substr(0, commaPos));
-                //    int y = std::stoi(msg.substr(commaPos + 1));
-                //    //std::cout << "Step 12, converted: " << "x = " << x << ", y = " << y << "\n";
-                //    msgHandler->ClientToMSG(x, y); //13. MSGClient(middleman)
-                //}
-                //else
-                //{
-                //    //std::cout << "Invalid coordinate format: " << msg << "\n";
-                //}
-                ReceiveMessages();
-            }
-            else
-            {
-                Shutdown();
-            }
+                        msgHandler->ClientToMSG(msg);
+                        //std::cout << "Step 12, ChatClient::ReadMessage::Received: " << msg << "\n";
+                        ReceiveMessages();
+                    }
+                    else
+                    {
+                        Shutdown();
+                    }
+                });
         });
-    //std::cout << "Step 12--------------\n";
+    std::cout << "Step 12--------------\n";
 }
 
 
@@ -94,7 +89,7 @@ void ChatClient::CheckAndSend() //3. Client(TCP)
 {
     //std::cout << "ChatClient::CheckAndSendMessage: " << ", Step 3. Client(TCP)\n";
     auto self = shared_from_this();
-    msg = msgHandler->MSGToClient();   //3. Client(TCP)
+    msg = msgHandler->MSGToClient();
     if (!msg.empty())
     {
         if (!socket.is_open())

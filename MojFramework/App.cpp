@@ -1,19 +1,18 @@
 #include "MainWindow.h"
 #include "App.h"
 #include <iostream>
-#include <sstream>
+
 
 App::App(MainWindow& wnd, std::atomic<bool>& runFlag, std::shared_ptr<MessageHandler> msgHandler_in)
 	:
 	wnd(wnd),
 	gfx(wnd),
     msgHandler(msgHandler_in),
-    running(runFlag),
-    nextFrame(true)
+    running(runFlag)
+    //nextFrame(true)
 {
     InputThread = std::thread(&App::InputLoop, this);
 }
-
 
 App::~App()
 {
@@ -23,20 +22,6 @@ App::~App()
     }
 }
 
-
-void App::Go()
-{
-    //float dt = ftOUT.Mark();
-    //float dtMs = dt * 1000.0f;
-    //std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
-
-    gfx.BeginFrame();
-    DisplayOutput();
-    nextFrame.store(true, std::memory_order_release);
-    gfx.EndFrame();
-}
-
-
 void App::InputLoop()
 {
     while (running)
@@ -45,15 +30,14 @@ void App::InputLoop()
         //float dtMs = dt * 1000.0f;
         //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
 
-        if (nextFrame.load(std::memory_order_acquire))
-        {
-            PlayerInput();
-            nextFrame.store(false, std::memory_order_release);
-        }
+        //if (nextFrame.load(std::memory_order_acquire))
+        //{
+        PlayerInput();
+        //nextFrame.store(false, std::memory_order_release);
+        //}
         std::this_thread::sleep_for(std::chrono::milliseconds(8));
     }
 }
-
 
 void App::PlayerInput()
 {
@@ -85,7 +69,44 @@ void App::PlayerInput()
     }
 }
 
-//
+///////////////////////////////////////////////////////////////////////////////////
+
+void App::Go()
+{
+    //float dt = ftOUT.Mark();
+    //float dtMs = dt * 1000.0f;
+    //std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
+
+    gfx.BeginFrame();
+    UnpackMessage();
+    //DisplayOutput();
+    //nextFrame.store(true, std::memory_order_release);
+    gfx.EndFrame();
+}
+
+void App::UnpackMessage()
+{
+    std::string response = msgHandler->MSGToApp();
+
+    if (!response.empty() && response.back() == '\n') 
+    {
+        response.pop_back();
+    }
+
+    size_t commaPos = response.find(',');
+    if (commaPos != std::string::npos) 
+    {
+        x = std::stoi(response.substr(0, commaPos));
+        y = std::stoi(response.substr(commaPos + 1));
+    }
+}
+
+void App::DisplayOutput()
+{
+    //UpdateEnemy();
+    UpdateCharacter();
+}
+
 //void App::UpdateEnemy()
 //{
 //    if (xEnemy < 100)
@@ -131,7 +152,6 @@ void App::PlayerInput()
 //    }   
 //}
 
-
 void App::UpdateCharacter()
 {
     for (int i = x; i < x + width; i++)
@@ -141,20 +161,4 @@ void App::UpdateCharacter()
             gfx.PutPixel(i, j, Colors::Green);
         }
     }
-}
-
-
-void App::DisplayOutput()
-{
-    UnpackMessage();
-    //UpdateEnemy();
-    UpdateCharacter();
-}
-
-
-void App::UnpackMessage()
-{
-    std::string response = msgHandler->MSGToApp();
-    std::istringstream iss(response);
-    iss >> x >> y;
 }

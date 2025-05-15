@@ -5,6 +5,7 @@
 #include <string>
 #include <atomic>
 #include <mutex>
+#include "FrameTimer.h"
 
 class ChatClient : public std::enable_shared_from_this<ChatClient>
 {
@@ -25,6 +26,7 @@ private:
     boost::asio::steady_timer timer;
     std::string msg;
     boost::asio::streambuf input_buffer;
+    FrameTimer ft;
     //    std::mutex mtx;
     //    std::queue<std::string> command_queue;
     //    boost::asio::steady_timer message_timer; 
