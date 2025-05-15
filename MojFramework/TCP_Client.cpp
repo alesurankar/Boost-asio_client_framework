@@ -59,9 +59,9 @@ void ChatClient::ReceiveMessages()
     //float dtMs = dt * 1000.0f;
     //std::cout << "void App::UpdateLoop(): Frame Time: " << dtMs << " ms\n";
     auto self = shared_from_this();
-    timer.expires_after(std::chrono::milliseconds(8));
-    timer.async_wait([this, self](boost::system::error_code ec)
-        {
+    //timer.expires_after(std::chrono::milliseconds(8));
+    //timer.async_wait([this, self](boost::system::error_code ec)
+    //    {
             boost::asio::async_read_until(socket, input_buffer, '\n',
                 [this, self](boost::system::error_code ec, std::size_t length)
                 {
@@ -80,8 +80,8 @@ void ChatClient::ReceiveMessages()
                         Shutdown();
                     }
                 });
-        });
-    std::cout << "Step 12--------------\n";
+    //    });
+    //std::cout << "Step 12--------------\n";
 }
 
 

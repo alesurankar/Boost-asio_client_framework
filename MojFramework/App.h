@@ -35,11 +35,9 @@ private:
 	std::shared_ptr<MessageHandler> msgHandler;
 	std::thread InputThread;
 	std::atomic<bool>& running;
-	//std::atomic<bool> nextFrame;
-	int x;
-	int y;
-	int width = 20;
-	int height = 20;
+	std::atomic<bool> nextFrame;
+	int x = 0;
+	int y = 0;
 	int xEnemy = 200;
 	int yEnemy = 200;
 	bool moveUP = true;

@@ -58,7 +58,9 @@ std::string MessageHandler::MSGToApp()
     //return response;
     std::lock_guard<std::mutex> lock(OUT_mtx);
     std::string messageToApp = validResponse;
-    std::cout << "std::string MessageHandler::MSGToApp(): " << messageToApp << "-was read\n";
+    //validResponse = "";
+    //validResponse = "";
+    //std::cout << "std::string MessageHandler::MSGToApp(): " << messageToApp << "-was read\n";
     return messageToApp;
 }
 

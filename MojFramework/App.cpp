@@ -8,8 +8,8 @@ App::App(MainWindow& wnd, std::atomic<bool>& runFlag, std::shared_ptr<MessageHan
 	wnd(wnd),
 	gfx(wnd),
     msgHandler(msgHandler_in),
-    running(runFlag)
-    //nextFrame(true)
+    running(runFlag),
+    nextFrame(true)
 {
     InputThread = std::thread(&App::InputLoop, this);
 }
@@ -26,15 +26,14 @@ void App::InputLoop()
 {
     while (running)
     {
-        //float dt = ftIN.Mark();
-        //float dtMs = dt * 1000.0f;
-        //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
-
-        //if (nextFrame.load(std::memory_order_acquire))
-        //{
-        PlayerInput();
-        //nextFrame.store(false, std::memory_order_release);
-        //}
+        if (!nextFrame)
+        {
+            //float dt = ftIN.Mark();
+            //float dtMs = dt * 1000.0f;
+            //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
+            PlayerInput();
+            nextFrame = true;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(8));
     }
 }
@@ -73,31 +72,40 @@ void App::PlayerInput()
 
 void App::Go()
 {
-    //float dt = ftOUT.Mark();
-    //float dtMs = dt * 1000.0f;
-    //std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
+    if (nextFrame)
+    {
+        float dt = ftOUT.Mark();
+        float dtMs = dt * 1000.0f;
+        std::cout << "Frame Time: " << dtMs << " ms" << std::endl;
 
-    gfx.BeginFrame();
-    UnpackMessage();
-    //DisplayOutput();
-    //nextFrame.store(true, std::memory_order_release);
-    gfx.EndFrame();
+        gfx.BeginFrame();
+        UnpackMessage();
+        DisplayOutput();
+        gfx.EndFrame();
+        nextFrame = false;
+    }
 }
 
 void App::UnpackMessage()
 {
     std::string response = msgHandler->MSGToApp();
+    std::cout << "void App::UnpackMessage(): " << response << "\n";
 
-    if (!response.empty() && response.back() == '\n') 
-    {
-        response.pop_back();
-    }
+    //if (!response.empty() && response.back() == '\n') 
+    //{
+    //    response.pop_back();
+    //}
 
-    size_t commaPos = response.find(',');
-    if (commaPos != std::string::npos) 
+    if (!response.empty())
     {
-        x = std::stoi(response.substr(0, commaPos));
-        y = std::stoi(response.substr(commaPos + 1));
+        size_t commaPos = response.find(',');
+        if (commaPos != std::string::npos)
+        {
+            x = std::stoi(response.substr(0, commaPos));
+            y = std::stoi(response.substr(commaPos + 1));
+            std::cout << "void App::UnpackMessage(): x = " << x << "\n";
+            std::cout << "void App::UnpackMessage(): y = " << y << "\n";
+        }
     }
 }
 
@@ -154,6 +162,8 @@ void App::DisplayOutput()
 
 void App::UpdateCharacter()
 {
+    int width = 20;
+    int height = 20;
     for (int i = x; i < x + width; i++)
     {
         for (int j = y; j < y + height; j++)
