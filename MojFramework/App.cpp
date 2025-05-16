@@ -26,14 +26,14 @@ void App::InputLoop()
 {
     while (running)
     {
-        if (!nextFrame)
+        if (nextFrame)
         {
             //float dt = ft.Mark();
             //float dtMs = dt * 1000.0f;
             //std::cout << "Input Frame Time: " << dtMs << " ms" << std::endl;
 
             PlayerInput();
-            nextFrame = true;
+            nextFrame = false;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(8));
     }
@@ -58,11 +58,11 @@ void App::PlayerInput()
     {
         input += 'D';
     }
-    if (msgHandler->GetFirstMessage())
-    {
-        input = "FIRST_MESSAGE";
-        msgHandler->FirstMessageSend();
-    }
+    //if (msgHandler->GetFirstMessage())
+    //{
+    //    input = "FIRST_MESSAGE";
+    //    msgHandler->FirstMessageSend();
+    //}
     if (!input.empty())
     {
         msgHandler->AppToMSG(input);
@@ -73,7 +73,7 @@ void App::PlayerInput()
 
 void App::Go()
 {
-    if (nextFrame)
+    if (!nextFrame)
     {
         //float dt = ft.Mark();
         //float dtMs = dt * 1000.0f;
@@ -83,7 +83,7 @@ void App::Go()
         UnpackMessage();
         DisplayOutput();
         gfx.EndFrame();
-        nextFrame = false;
+        nextFrame = true;
     }
 }
 

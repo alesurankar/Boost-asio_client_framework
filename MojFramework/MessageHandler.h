@@ -15,8 +15,8 @@ public:
     std::string MSGToApp();
     //void ClientToMSG(int x, int y);
     //std::optional<std::pair<int, int>> MSGToApp();
-    bool GetFirstMessage();
-    void FirstMessageSend();
+    //bool GetFirstMessage();
+    //void FirstMessageSend();
 private:
     std::mutex IN_mtx;
     std::mutex OUT_mtx;
@@ -27,5 +27,5 @@ private:
     //std::queue<std::string> app_responses;
     //std::queue<std::pair<int, int>> app_position;
     std::optional<std::pair<int, int>> lastPos = std::nullopt;
-    std::atomic<bool> firstMessage;
+    //std::atomic<bool> firstMessage;
 };

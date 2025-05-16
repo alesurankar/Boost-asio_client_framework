@@ -28,7 +28,8 @@ void ChatClient::Start()
             {
                 boost::asio::ip::tcp::no_delay option(true);
                 socket.set_option(option);
-                //SendUsername();
+                SendUsername();
+                ConfirmUsername();
                 boost::asio::post(socket.get_executor(), [this, self]()
                     {
                         ReceiveMessages();
@@ -42,16 +43,23 @@ void ChatClient::Start()
         });
 }
 
+void ChatClient::SendUsername()
+{
+    //std::cout << "ChatClient::SendUsername(): "<< username << "\n";
+    asio::write(socket, asio::buffer(username + "\n"));
+}
 
-//void ChatClient::SendUsername()
-//{
-//    //std::string first_command = "UP";
-//    //std::cout << "ChatClient::SendUsername: " << first_command << "\n";
-//    //asio::write(socket, asio::buffer(first_command + "\n"));
-//    std::cout << "ChatClient::SendUsername: "<< username << "\n";
-//    asio::write(socket, asio::buffer(username + "\n"));
-//}
+void ChatClient::ConfirmUsername()
+{
+    //std::cout << "void ChatClient::ConfirmUsername():\n";
+    boost::asio::streambuf buf;
+    boost::asio::read_until(socket, buf, '\n');
 
+    std::istream is(&buf);
+    std::string reply;
+    std::getline(is, reply);
+    std::cout << "Server reply: " << reply << "\n";
+}
 
 void ChatClient::ReceiveMessages()
 {
@@ -102,7 +110,7 @@ void ChatClient::CheckAndSend()
             {
                 if (!ec)
                 {
-                    std::cout << "Step 4: NetworkingThread::ChatClient::CheckAndSendMessage: " << msg;
+                    //std::cout << "Step 4: NetworkingThread::ChatClient::CheckAndSendMessage: " << msg;
                 }
                 else
                 {
@@ -114,7 +122,7 @@ void ChatClient::CheckAndSend()
                     {
                         CheckAndSend();
                     });
-                std::cout << "Step4--------------\n";
+                //std::cout << "Step4--------------\n";
             });
     }
     else

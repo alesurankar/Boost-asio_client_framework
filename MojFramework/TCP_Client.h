@@ -13,7 +13,8 @@ public:
     ChatClient(boost::asio::io_context& io_in, const std::string& host_in, unsigned short port_in, const std::string& username_in, std::shared_ptr<MessageHandler> msgHandler_in);
     void Start();
 private:
-    //    void SendUsername();
+    void SendUsername();
+    void ConfirmUsername();
     void ReceiveMessages();
     void CheckAndSend();
     void Shutdown();

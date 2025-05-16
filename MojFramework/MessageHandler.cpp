@@ -3,8 +3,8 @@
 
 
 MessageHandler::MessageHandler()
-    :
-    firstMessage(true)
+    //:
+    //firstMessage(true)
 {}
 
 
@@ -100,12 +100,12 @@ std::string MessageHandler::MSGToApp()
 //    }
 //}
 
-bool MessageHandler::GetFirstMessage()
-{
-    return firstMessage.load();
-}
-
-void MessageHandler::FirstMessageSend()
-{
-    firstMessage.store(false);
-}
+//bool MessageHandler::GetFirstMessage()
+//{
+//    return firstMessage.load();
+//}
+//
+//void MessageHandler::FirstMessageSend()
+//{
+//    firstMessage.store(false);
+//}
