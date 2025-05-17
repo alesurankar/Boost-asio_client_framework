@@ -18,9 +18,10 @@ public:
 private:
 	void InputLoop();
 	void PlayerInput();
-	//void UpdateEnemy();
+	void UpdateEnemy();
 	void UpdateCharacter();
 	void DisplayOutput();
+	bool ParsePosition(const std::string& message, const char* prefix, int& outX, int& outY);
 	void UnpackMessage();
 	/********************************/
 	/*  Moje Funkcije               */
@@ -37,9 +38,7 @@ private:
 	std::atomic<bool> nextFrame;
 	int x = 0;
 	int y = 0;
-	int xEnemy = 200;
-	int yEnemy = 200;
-	bool moveUP = true;
-	bool moveLeft = true;
+	int xEnemy = 0;
+	int yEnemy = 0;
 	/********************************/
 };

@@ -87,6 +87,29 @@ void App::Go()
     }
 }
 
+bool App::ParsePosition(const std::string& message, const char* prefix, int& outX, int& outY)
+{
+    size_t prefix_len = strlen(prefix);
+    size_t pos = message.find(prefix);
+    if (pos == std::string::npos) return false;
+
+    pos += prefix_len;
+
+    size_t commaPos = message.find(',', pos);
+    if (commaPos == std::string::npos) return false;
+
+    try {
+        outX = std::stoi(message.substr(pos, commaPos - pos));
+        outY = std::stoi(message.substr(commaPos + 1));
+    }
+    catch (...) {
+        return false;
+    }
+    return true;
+}
+
+
+
 void App::UnpackMessage()
 {
     std::string response = msgHandler->MSGToApp();
@@ -112,54 +135,22 @@ void App::UnpackMessage()
 
 void App::DisplayOutput()
 {
-    //UpdateEnemy();
+    UpdateEnemy();
     UpdateCharacter();
 }
 
-//void App::UpdateEnemy()
-//{
-//    if (xEnemy < 100)
-//    {
-//        moveLeft = false;
-//    }
-//    if (xEnemy > 700)
-//    {
-//        moveLeft = true;
-//    }
-//    if (yEnemy < 100)
-//    {
-//        moveUP = false;
-//    }
-//    if (yEnemy > 500)
-//    {
-//        moveUP = true;
-//    }
-//    if (moveUP)
-//    {
-//        yEnemy--;
-//    }
-//    else if (!moveUP)
-//    {
-//        yEnemy++;
-//    }
-//    if (moveLeft)
-//    {
-//        xEnemy--;
-//    }
-//    else if (!moveLeft)
-//    {
-//        xEnemy++;
-//    }
-//    int width = 10;
-//    int height = 10;
-//    for (int i = xEnemy; i < xEnemy + width; i++)
-//    {
-//        for (int j = yEnemy; j < yEnemy + height; j++)
-//        {
-//            gfx.PutPixel(i, j, Colors::Red);
-//        }
-//    }   
-//}
+void App::UpdateEnemy()
+{
+    int width = 10;
+    int height = 10;
+    for (int i = xEnemy; i < xEnemy + width; i++)
+    {
+        for (int j = yEnemy; j < yEnemy + height; j++)
+        {
+            gfx.PutPixel(i, j, Colors::Red);
+        }
+    }   
+}
 
 void App::UpdateCharacter()
 {
