@@ -1,11 +1,12 @@
 #pragma once
 #define _WIN32_WINNT 0x0601
 #include "MessageHandler.h"
+#include "FrameTimer.h"
 #include <boost/asio.hpp>
 #include <string>
 #include <atomic>
 #include <mutex>
-#include "FrameTimer.h"
+#include <memory>
 
 class ChatClient : public std::enable_shared_from_this<ChatClient>
 {
@@ -19,6 +20,7 @@ private:
     void CheckAndSend();
     void Shutdown();
 private:
+    FrameTimer ft;
     boost::asio::ip::tcp::socket socket;
     std::string username;
     std::string host;
@@ -27,8 +29,4 @@ private:
     boost::asio::steady_timer timer;
     std::string msg;
     boost::asio::streambuf input_buffer;
-    FrameTimer ft;
-    //    std::mutex mtx;
-    //    std::queue<std::string> command_queue;
-    //    boost::asio::steady_timer message_timer; 
 };

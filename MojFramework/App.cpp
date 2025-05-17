@@ -42,7 +42,7 @@ void App::InputLoop()
 
 void App::PlayerInput()
 {
-    std::string input = "";
+    input.clear();
     if (wnd.kbd.KeyIsPressed('W'))
     {
         input += 'W';
@@ -59,11 +59,6 @@ void App::PlayerInput()
     {
         input += 'D';
     }
-    //if (msgHandler->GetFirstMessage())
-    //{
-    //    input = "FIRST_MESSAGE";
-    //    msgHandler->FirstMessageSend();
-    //}
     if (!input.empty())
     {
         msgHandler->AppToMSG(input);
@@ -92,62 +87,64 @@ void App::ParsePosition(const std::string& message, const char* prefix, int& out
 {
     size_t prefix_len = std::strlen(prefix);
     size_t pos = message.find(prefix);
-    if (pos != std::string::npos)
-    {
-        pos += prefix_len;
-
-        size_t commaPos = message.find(',', pos);
-        if (commaPos != std::string::npos)
-        {
-            outX = std::stoi(message.substr(pos, commaPos - pos));
-            outY = std::stoi(message.substr(commaPos + 1));
-        }
-        else
-        {
-            outX = 0;
-            outY = 0;
-        }
-    }
-    else
+    if (pos == std::string::npos)
     {
         outX = 0;
         outY = 0;
+        return;
+    }
+
+    pos += prefix_len;
+    const char* data = message.c_str() + pos;
+
+    // Parse x
+    outX = 0;
+    while (*data >= '0' && *data <= '9')
+    {
+        outX = outX * 10 + (*data - '0');
+        ++data;
+    }
+
+    if (*data != ',')
+    {
+        outX = 0;
+        outY = 0;
+        return;
+    }
+
+    ++data;
+
+    // Parse y
+    outY = 0;
+    while (*data >= '0' && *data <= '9')
+    {
+        outY = outY * 10 + (*data - '0');
+        ++data;
     }
 }
 
-
-
 void App::UnpackMessage()
 {
-    std::string response = msgHandler->MSGToApp();
+    const std::string& response = msgHandler->MSGToApp();
+    //std::cout << "void App::UnpackMessage(): " << response << "\n";
     if (!response.empty())
     {
-        size_t newlinePos = response.find('\n');
+        size_t newlinePos = response.find('|');
         //std::cout << "void App::UnpackMessage(): " << response << "\n";
-
-        //if (!response.empty() && response.back() == '\n') 
-        //{
-        //    response.pop_back();
-        //}
 
         if (newlinePos != std::string::npos)
         {
             std::string playerPart = response.substr(0, newlinePos);
             std::string enemyPart = response.substr(newlinePos + 1);
 
-
             ParsePosition(playerPart, Constants::player_prefix, x, y);
             ParsePosition(enemyPart, Constants::enemy_prefix, xEnemy, yEnemy);
         }
-        else
-        {
-            // fallback if no newline, try parsing only player
-            ParsePosition(response, Constants::player_prefix, x, y);
-        }
-        std::cout << "void App::UnpackMessage(): x = " << x << "\n";
-        std::cout << "void App::UnpackMessage(): y = " << y << "\n";
-        std::cout << "void App::UnpackMessage(): xEnemy = " << xEnemy << "\n";
-        std::cout << "void App::UnpackMessage(): yEnemy = " << yEnemy << "\n";
+
+        //std::cout << "void App::UnpackMessage(): x = " << x << "\n";
+        //std::cout << "void App::UnpackMessage(): y = " << y << "\n";
+        //std::cout << "void App::UnpackMessage(): xEnemy = " << xEnemy << "\n";
+        //std::cout << "void App::UnpackMessage(): yEnemy = " << yEnemy << "\n";
     }
 }
 

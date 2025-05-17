@@ -6,6 +6,8 @@
 #include "FrameTimer.h"
 #include <string>
 #include <thread>    
+#include <memory>
+#include <atomic>
 
 class App
 {
@@ -35,7 +37,8 @@ private:
 	std::shared_ptr<MessageHandler> msgHandler;
 	std::thread InputThread;
 	std::atomic<bool>& running;
-	std::atomic<bool> nextFrame;
+	std::atomic<bool> nextFrame; 
+	std::string input;
 	int x = 0;
 	int y = 0;
 	int xEnemy = 0;

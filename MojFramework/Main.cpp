@@ -6,25 +6,25 @@ This Framework is Cloned and modified from PlanetChili - chili_framework <http:/
 #include "MyException.h"
 
 #include "TCP_Client.h"
+#include <memory>
 #include <fstream>
 #include <thread>
 #include <atomic>
-#include <chrono>
-#include <iostream>
+//#include <iostream>
 
 
-void CreateConsole()
-{
-	AllocConsole();
-	FILE* fp;
-	freopen_s(&fp, "CONOUT$", "w", stdout);
-	std::cout.clear();
-}
+//void CreateConsole()
+//{
+//	AllocConsole();
+//	FILE* fp;
+//	freopen_s(&fp, "CONOUT$", "w", stdout);
+//	std::cout.clear();
+//}
 
 
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR pArgs, INT)
 {
-	CreateConsole();
+	//CreateConsole();
 
 	std::ifstream file("C:/Projects/Python_API_setup_for_NinjaStrike/username.txt");
 	std::string username;
