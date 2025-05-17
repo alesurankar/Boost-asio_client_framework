@@ -21,7 +21,7 @@ private:
 	void UpdateEnemy();
 	void UpdateCharacter();
 	void DisplayOutput();
-	bool ParsePosition(const std::string& message, const char* prefix, int& outX, int& outY);
+	void ParsePosition(const std::string& message, const char* prefix, int& outX, int& outY);
 	void UnpackMessage();
 	/********************************/
 	/*  Moje Funkcije               */
